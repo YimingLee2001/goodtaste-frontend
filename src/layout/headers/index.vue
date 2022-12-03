@@ -1,7 +1,15 @@
 <template>
-  <div class="navbar"></div>
+  <div class="navbar">
+    <Hamburger />
+    <div class="navbar-right">
+      <Avatar />
+    </div>
+  </div>
 </template>
-<script setup></script>
+<script setup>
+import Avatar from './components/avatar.vue'
+import Hamburger from './components/hamburger.vue'
+</script>
 <style lang="scss" scoped>
 .navbar {
   width: 100%;

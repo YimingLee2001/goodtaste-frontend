@@ -15,14 +15,13 @@
       <el-button type="primary" class="login-button" @click="handleLogin"
         >登录</el-button
       >
-      <router-link to="signup">还没有账号？立即注册</router-link>
+      <router-link to="signup" class="tips">还没有账号？立即注册</router-link>
     </el-form>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import { User, Lock } from '@element-plus/icons-vue'
 import { useStore } from 'vuex'
 
 const store = useStore()

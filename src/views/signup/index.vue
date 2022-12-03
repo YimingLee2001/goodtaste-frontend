@@ -17,7 +17,6 @@
 
 <script setup>
 import { ref } from 'vue'
-import { User } from '@element-plus/icons-vue'
 import { signup } from '@/api/user'
 
 const form = ref({

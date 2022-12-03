@@ -27,6 +27,10 @@ export const userPage = (data) => {
   return request({
     url: '/user/page',
     method: 'GET',
-    data
+    params: {
+      page: data.page,
+      pageSize: data.pageSize,
+      name: data.name
+    }
   })
 }
