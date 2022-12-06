@@ -1,18 +1,18 @@
 import request from './request'
 
-export const login = (data) => {
+export const login = (user) => {
   return request({
     url: '/user/login',
     method: 'POST',
-    data
+    user
   })
 }
 
-export const signup = (data) => {
+export const signup = (user) => {
   return request({
     url: '/user/signup',
     method: 'POST',
-    data
+    user
   })
 }
 
@@ -23,14 +23,32 @@ export const logout = () => {
   })
 }
 
-export const userPage = (data) => {
+export const userPage = (pageQueryNickname) => {
   return request({
-    url: '/user/page',
+    url: '/user/pagebynickname',
     method: 'GET',
     params: {
-      page: data.page,
-      pageSize: data.pageSize,
-      name: data.name
+      page: pageQueryNickname.page,
+      pageSize: pageQueryNickname.pageSize,
+      nickname: pageQueryNickname.nickname
     }
+  })
+}
+
+export const userGetById = (uid) => {
+  return request({
+    url: '/user/getbyid',
+    method: 'GET',
+    params: {
+      uid: uid
+    }
+  })
+}
+
+export const userUpdateById = (user) => {
+  return request({
+    url: '/user/updatebyid',
+    method: 'POST',
+    user
   })
 }

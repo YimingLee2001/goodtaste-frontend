@@ -15,7 +15,7 @@ const routes = [
     path: '/',
     name: '/',
     component: () => import('../layout'),
-    redirect: '/mySeek',
+    redirect: '/userInfo',
     children: [
       {
         path: 'roles',
