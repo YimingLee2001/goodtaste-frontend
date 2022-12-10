@@ -3,7 +3,7 @@ import store from '@/store'
 
 const whiteList = ['/login', '/signup']
 router.beforeEach((to, from, next) => {
-  if (store.getters.token) {
+  if (store.getters.uid) {
     if (to.path === './login') {
       next('/')
     } else {

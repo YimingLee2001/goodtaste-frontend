@@ -38,7 +38,7 @@ export const seekAdd = (seek) => {
   return request({
     url: 'seek/add',
     method: 'POST',
-    seek
+    data: seek
   })
 }
 
@@ -46,7 +46,7 @@ export const seekUpdateById = (seek) => {
   return request({
     url: 'seek/updatebyid',
     method: 'POST',
-    seek
+    data: seek
   })
 }
 
@@ -54,6 +54,18 @@ export const seekRemoveById = (seek) => {
   return request({
     url: 'seek/removebyid',
     methon: 'DELETE',
-    seek
+    data: seek
+  })
+}
+
+export const seekPageByCity = (pageQueryCity) => {
+  return request({
+    url: 'seek/pagebycity',
+    method: 'GET',
+    params: {
+      page: pageQueryCity.page,
+      pageSize: pageQueryCity.pageSize,
+      city: pageQueryCity.city
+    }
   })
 }

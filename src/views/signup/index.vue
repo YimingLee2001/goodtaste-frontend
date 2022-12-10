@@ -1,12 +1,83 @@
 <template>
   <div class="login-container">
-    <el-form :model="form" class="login-form">
+    <el-form :model="form" label-width="120px" class="login-form">
       <div class="title-container">
         <h3 class="title">用户注册</h3>
       </div>
-      <el-form-item>
-        <el-icon :size="20" class="svg-container"><User /></el-icon>
+      <el-form-item label="昵称">
         <el-input v-model="form.nickname" />
+      </el-form-item>
+      <el-form-item label="密码">
+        <el-input v-model="form.password" />
+      </el-form-item>
+      <el-form-item label="联系电话">
+        <el-input v-model="form.phone" />
+      </el-form-item>
+      <el-form-item label="所在地区">
+        <el-select v-model="form.province" placeholder="请选择所在省">
+          <el-option
+            v-for="province in Object.keys(citiesList)"
+            :index="province"
+            :key="province"
+            :label="province"
+            :value="province"
+          />
+        </el-select>
+        <el-select v-model="form.city" placeholder="请选择所在市">
+          <el-option
+            v-for="city in citiesList[form.province]"
+            :index="city"
+            :key="city"
+            :label="city"
+            :value="city"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="真实姓名">
+        <el-input v-model="form.username" />
+      </el-form-item>
+      <el-form-item label="身份类型">
+        <el-select v-model="form.idType" placeholder="请选择身份类型">
+          <el-option
+            v-for="idType in idTypes"
+            :index="idType"
+            :key="idType"
+            :label="idType"
+            :value="idType"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="证件号码">
+        <el-input v-model="form.idNumber" />
+      </el-form-item>
+      <el-form-item label="用户头像">
+        <el-input v-model="form.avatarUrl" />
+        <div class="demo-image">
+          <el-image
+            style="width: 350px; height: 350px"
+            :src="form.avatarUrl"
+            fit="contain"
+          />
+          <el-image
+            style="width: 250px; height: 250px"
+            :src="form.avatarUrl"
+            fit="contain"
+          />
+          <el-image
+            style="width: 150px; height: 150px"
+            :src="form.avatarUrl"
+            fit="contain"
+          />
+          <el-image
+            style="width: 100px; height: 100px"
+            :src="form.avatarUrl"
+            fit="contain"
+          />
+        </div>
+      </el-form-item>
+
+      <el-form-item label="个人简介">
+        <el-input v-model="form.desc" type="textarea" />
       </el-form-item>
       <el-button type="primary" class="login-button" @click="handleSignup"
         >注册</el-button
@@ -18,9 +89,20 @@
 <script setup>
 import { ref } from 'vue'
 import { signup } from '@/api/user'
+import citiesList from '@/assets/city'
+import idTypes from '@/assets/idType'
 
 const form = ref({
-  nickname: 'Lee'
+  nickname: '',
+  password: '',
+  phone: '',
+  idType: '',
+  idNumber: '',
+  province: '',
+  city: '',
+  username: '',
+  avatarUrl:
+    'https://img.zcool.cn/community/01a3865ab91314a8012062e3c38ff6.png@1280w_1l_2o_100sh.png'
 })
 
 const handleSignup = () => {
@@ -42,9 +124,9 @@ $cursor: #fff;
 
   .login-form {
     position: relative;
-    width: 520px;
+    width: 1200px;
     max-width: 100%;
-    padding: 160px 35px 0;
+    padding: 35px 35px 0;
     margin: 0 auto;
     overflow: hidden;
 
@@ -58,7 +140,7 @@ $cursor: #fff;
     ::v-deep(.el-input) {
       //   display: inline-block;
       height: 47px;
-      width: 92%; // 这个值是我自己试出来的
+      width: 100%; // 这个值是我自己试出来的
 
       input {
         background: transparent;
@@ -68,11 +150,12 @@ $cursor: #fff;
         padding: 12px 5px 12px 15px;
         color: $dark_gray;
         height: 47px;
-        caret-color: $cursor;
+        caret-color: $dark_gray;
       }
     }
     .login-button {
-      width: 100%;
+      margin: 0 25%;
+      width: 50%;
       box-sizing: border-box;
     }
   }

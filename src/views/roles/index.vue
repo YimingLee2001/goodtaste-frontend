@@ -3,8 +3,8 @@
     <el-row :gutter="20" class="header">
       <el-col :span="7">
         <el-input
-          v-model="queryForm.name"
-          placeholder="请输入该用户姓名"
+          v-model="queryForm.nickname"
+          placeholder="请输入该用户昵称"
           clearable
         />
       </el-col>
@@ -33,7 +33,7 @@ import { userPage } from '@/api/user'
 import { ref } from 'vue'
 
 const queryForm = ref({
-  name: '',
+  nickname: '',
   page: 1,
   pageSize: 5
 })

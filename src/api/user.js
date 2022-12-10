@@ -1,10 +1,11 @@
 import request from './request'
 
 export const login = (user) => {
+  console.log(user)
   return request({
     url: '/user/login',
     method: 'POST',
-    user
+    data: user
   })
 }
 
@@ -12,7 +13,7 @@ export const signup = (user) => {
   return request({
     url: '/user/signup',
     method: 'POST',
-    user
+    data: user
   })
 }
 
@@ -49,6 +50,14 @@ export const userUpdateById = (user) => {
   return request({
     url: '/user/updatebyid',
     method: 'POST',
-    user
+    data: user
+  })
+}
+
+export const userUpdatePasswordById = (user) => {
+  return request({
+    url: '/user/updatepasswordbyid',
+    method: 'POST',
+    data: user
   })
 }

@@ -28,6 +28,11 @@ const routes = [
         component: () => import('@/views/userInfo/index.vue')
       },
       {
+        path: 'password',
+        name: 'password',
+        component: () => import('@/views/password/index.vue')
+      },
+      {
         path: 'mySeek',
         name: 'mySeek',
         component: () => import('@/views/mySeek/index.vue')

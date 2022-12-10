@@ -1,4 +1,5 @@
 import axios from 'axios'
+import router from '@/router'
 import { ElMessage } from 'element-plus'
 
 const service = axios.create({
@@ -8,7 +9,7 @@ const service = axios.create({
 
 service.interceptors.request.use(
   (config) => {
-    config.headers.Authorization = localStorage.getItem('token')
+    // config.headers.Authorization = localStorage.getItem('token')
     return config
   },
   (error) => {
@@ -23,6 +24,9 @@ service.interceptors.response.use(
       return data.data
     } else {
       ElMessage.error(data.msg)
+      if (data.msg === 'NOTLOGIN') {
+        router.push('/login')
+      }
       return Promise.reject(new Error(data.msg))
     }
   },
