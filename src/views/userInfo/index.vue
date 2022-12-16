@@ -17,12 +17,22 @@
     </el-form-item>
     <el-form-item label="所在地区">
       <el-select v-model="form.province" placeholder="请选择所在省">
-        <el-option label="Zone one" value="shanghai" />
-        <el-option label="Zone two" value="beijing" />
+        <el-option
+          v-for="province in Object.keys(citiesList)"
+          :index="province"
+          :key="province"
+          :label="province"
+          :value="province"
+        />
       </el-select>
       <el-select v-model="form.city" placeholder="请选择所在市">
-        <el-option label="Zone one" value="shanghai" />
-        <el-option label="Zone two" value="beijing" />
+        <el-option
+          v-for="city in citiesList[form.province]"
+          :index="city"
+          :key="city"
+          :label="city"
+          :value="city"
+        />
       </el-select>
     </el-form-item>
     <el-form-item label="用户头像">
@@ -64,6 +74,8 @@
 import { ref } from 'vue'
 import { userUpdateById, userGetById } from '@/api/user'
 import { useStore } from 'vuex'
+import citiesList from '@/assets/city'
+import { ElMessage } from 'element-plus'
 
 const store = useStore()
 const form = ref({})
@@ -74,8 +86,12 @@ const initUserInfo = async () => {
 initUserInfo()
 
 const handleUpdate = async () => {
-  await userUpdateById(form.value)
-  initUserInfo()
+  try {
+    ElMessage.success(await userUpdateById(form.value))
+    initUserInfo()
+  } catch (err) {
+    // pass
+  }
 }
 </script>
 

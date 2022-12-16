@@ -17,7 +17,7 @@
     <el-table-column prop="nickname" label="Nickname" width="180" />
     <el-table-column prop="province" label="Province" width="180" />
     <el-table-column prop="city" label="City" width="180" />
-    <el-table-column prop="city" label="City" width="180" />
+    <el-table-column prop="phone" label="Phone" width="180" />
   </el-table>
   <el-pagination
     :page-size="queryForm.pageSize"
@@ -31,6 +31,7 @@
 <script setup>
 import { userPage } from '@/api/user'
 import { ref } from 'vue'
+import { ElMessage } from 'element-plus'
 
 const queryForm = ref({
   nickname: '',
@@ -42,9 +43,14 @@ const tableData = ref([])
 const total = ref(0)
 
 const initUsersList = async () => {
-  const res = await userPage(queryForm.value)
-  total.value = res.total
-  tableData.value = res.records
+  try {
+    const res = await userPage(queryForm.value)
+    total.value = res.total
+    tableData.value = res.records
+    ElMessage.success('刷新列表成功')
+  } catch (err) {
+    // pass
+  }
 }
 
 initUsersList()

@@ -53,7 +53,7 @@ export const seekUpdateById = (seek) => {
 export const seekRemoveById = (seek) => {
   return request({
     url: 'seek/removebyid',
-    methon: 'DELETE',
+    method: 'DELETE',
     data: seek
   })
 }
@@ -67,5 +67,13 @@ export const seekPageByCity = (pageQueryCity) => {
       pageSize: pageQueryCity.pageSize,
       city: pageQueryCity.city
     }
+  })
+}
+
+export const seekConfirmById = (reply) => {
+  return request({
+    url: 'seek/confirmbyid',
+    method: 'POST',
+    data: reply
   })
 }

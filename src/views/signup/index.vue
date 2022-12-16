@@ -91,6 +91,7 @@ import { ref } from 'vue'
 import { signup } from '@/api/user'
 import citiesList from '@/assets/city'
 import idTypes from '@/assets/idType'
+import { ElMessage } from 'element-plus'
 
 const form = ref({
   nickname: '',
@@ -105,8 +106,12 @@ const form = ref({
     'https://img.zcool.cn/community/01a3865ab91314a8012062e3c38ff6.png@1280w_1l_2o_100sh.png'
 })
 
-const handleSignup = () => {
-  signup(form.value)
+const handleSignup = async () => {
+  try {
+    ElMessage.success(await signup(form.value))
+  } catch (err) {
+    // pass
+  }
 }
 </script>
 

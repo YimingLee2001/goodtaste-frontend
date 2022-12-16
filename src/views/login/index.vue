@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <el-form :model="form" class="login-form">
+    <el-form ref="ruleFormRef" :model="form" :rules="rules" class="login-form">
       <div class="title-container">
         <h3 class="title">用户登录</h3>
       </div>
@@ -26,9 +26,14 @@ import { useStore } from 'vuex'
 
 const store = useStore()
 
+const ruleFormRef = ref()
 const form = ref({
   nickname: 'Lee',
   password: '123456'
+})
+const rules = ref({
+  nickname: [{ required: true, message: 'Please input Activity name' }],
+  password: []
 })
 
 const handleLogin = () => {

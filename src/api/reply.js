@@ -27,3 +27,23 @@ export const replyPageByUser = (pageQueryUser) => {
     }
   })
 }
+
+export const replyRemoveById = (reply) => {
+  return request({
+    url: 'reply/removebyid',
+    method: 'DELETE',
+    data: reply
+  })
+}
+
+export const replyPageBySeek = (pageQuerySeek) => {
+  return request({
+    url: 'reply/pagebyseek',
+    method: 'GET',
+    params: {
+      page: pageQuerySeek.page,
+      pageSize: pageQuerySeek.pageSize,
+      sid: pageQuerySeek.sid
+    }
+  })
+}

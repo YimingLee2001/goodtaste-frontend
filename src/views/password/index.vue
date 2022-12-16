@@ -13,6 +13,7 @@
 import { ref } from 'vue'
 import { userUpdatePasswordById } from '@/api/user'
 import { useStore } from 'vuex'
+import { ElMessage } from 'element-plus'
 
 const store = useStore()
 const form = ref({
@@ -26,8 +27,12 @@ const initUserInfo = async () => {
 initUserInfo()
 
 const handleUpdate = async () => {
-  await userUpdatePasswordById(form.value)
-  initUserInfo()
+  try {
+    ElMessage.success(await userUpdatePasswordById(form.value))
+    initUserInfo()
+  } catch (err) {
+    // pass
+  }
 }
 </script>
 

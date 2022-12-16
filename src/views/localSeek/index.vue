@@ -2,26 +2,43 @@
   <el-card>
     <el-row :gutter="20" class="header">
       <el-button type="primary" icon="Search" @click="initSeekList"
-        >Primary</el-button
+        >也能看别的城市的呀</el-button
       >
     </el-row>
   </el-card>
+
   <el-table :data="tableData" stripe style="width: 100%">
-    <el-table-column prop="topic" label="Topic" width="180" />
-    <el-table-column prop="tasteType" label="TasteType" width="180" />
-    <el-table-column prop="maxPrice" label="MaxPrice" width="180" />
-    <el-table-column prop="state" label="State" width="180" />
+    <el-table-column prop="topic" label="主题" width="180" />
+    <el-table-column prop="tasteType" label="味道类型" width="180" />
+    <el-table-column prop="maxPrice" label="最高价格" width="180" />
+    <el-table-column label="状态" width="180">
+      <template #default="scope">
+        {{ seekStates[scope.row.state] }}
+      </template>
+    </el-table-column>
     <el-table-column label="操作" width="300">
       <template #default="scope">
         <el-button
           type="primary"
           size="small"
           icon="Edit"
-          @click="initDialog(scope.row)"
+          @click="initDetailDialog(scope.row)"
           >查看详情</el-button
         >
-        <el-button type="warning" size="small" icon="Setting"></el-button>
-        <el-button type="danger" size="small" icon="Delete"></el-button>
+        <el-button
+          type="success"
+          size="small"
+          icon="Pointer"
+          @click="addReply(scope.row)"
+          >我要响应</el-button
+        >
+        <el-button
+          type="warning"
+          size="small"
+          icon="ChatLineSquare"
+          @click="initReplyDialog(scope.row)"
+          >查看响应</el-button
+        >
       </template>
     </el-table-column>
   </el-table>
@@ -33,40 +50,86 @@
     @size-change="handleSizeChange"
     @current-change="handleCurrentChange"
   />
-  <el-dialog v-model="dialogVisible" title="寻味道详情" width="30%">
-    <el-form :model="dialogForm" label-width="120px">
+
+  <!-- dialogFormUpdate -->
+  <el-dialog v-model="dialogFormUpdateVisiable" title="寻味道详情" width="50%">
+    <el-form :model="dialogFormUpdate" label-width="120px">
       <el-form-item label="主题">
-        <el-input v-model="dialogForm.topic" />
+        <el-input v-model="dialogFormUpdate.topic" />
       </el-form-item>
-      <el-form-item label="主题">
-        <el-input v-model="dialogForm.topic" />
+      <el-form-item label="味道类型">
+        <el-select
+          v-model="dialogFormUpdate.tasteType"
+          placeholder="请选择味道类型"
+        >
+          <el-option
+            v-for="tasteType in tasteTypes"
+            :index="tasteType"
+            :key="tasteType"
+            :label="tasteType"
+            :value="tasteType"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="主题">
-        <el-input v-model="dialogForm.topic" />
+      <el-form-item label="最高价格">
+        <el-input v-model="dialogFormUpdate.maxPrice" />
       </el-form-item>
-      <el-form-item label="简介">
-        <el-input v-model="dialogForm.about" />
+      <el-form-item label="截止时间">
+        <el-input v-model="dialogFormUpdate.deadline" />
       </el-form-item>
-      <el-form-item label="主题">
-        <el-input v-model="dialogForm.topic" />
+      <el-form-item label="味道图片">
+        <el-input v-model="dialogFormUpdate.pictureUrl" />
+        <el-image
+          style="width: 300px; height: 300px"
+          :src="dialogFormUpdate.pictureUrl"
+          fit="contain"
+        />
+      </el-form-item>
+      <el-form-item label="创建时间">
+        <el-input v-model="dialogFormUpdate.createTime" />
+      </el-form-item>
+      <el-form-item label="更新时间">
+        <el-input v-model="dialogFormUpdate.updateTime" />
+      </el-form-item>
+      <el-form-item label="当前状态">
+        <el-input v-model="dialogFormUpdate.state" />
       </el-form-item>
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="dialogVisible = false">
-          Confirm
-        </el-button>
+        <el-button @click="dialogFormUpdateVisiable = false">取消</el-button>
       </span>
     </template>
   </el-dialog>
+
+  <!-- dialogTable -->
+
+  <el-dialog v-model="dialogTableVisiable" title="请品鉴详情" width="40%">
+    <el-table :data="dialogTable" stripe style="width: 100%">
+      <el-table-column prop="about" label="简介" width="180" />
+      <el-table-column label="状态" width="180">
+        <template #default="scope">
+          {{ replyStates[scope.row.state] }}
+        </template>
+      </el-table-column>
+    </el-table>
+  </el-dialog>
 </template>
+
 <script setup>
 import { seekPageByCity } from '@/api/seek'
 import { ref } from 'vue'
 import { useStore } from 'vuex'
+import tasteTypes from '@/assets/tasteType'
+import seekStates from '@/assets/seekState'
+import replyStates from '@/assets/replyState'
+import { replyPageBySeek, replyAdd } from '@/api/reply'
+import { ElMessage } from 'element-plus'
 
 const store = useStore()
+
+// seekList
+
 const queryForm = ref({
   city: store.getters.city,
   page: 1,
@@ -77,9 +140,14 @@ const tableData = ref([])
 const total = ref(0)
 
 const initSeekList = async () => {
-  const res = await seekPageByCity(queryForm.value)
-  total.value = res.total
-  tableData.value = res.records
+  try {
+    const res = await seekPageByCity(queryForm.value)
+    total.value = res.total
+    tableData.value = res.records
+    ElMessage.success('刷新列表成功')
+  } catch (err) {
+    // pass
+  }
 }
 
 initSeekList()
@@ -95,14 +163,43 @@ const handleCurrentChange = (pageNum) => {
   initSeekList()
 }
 
-// 以下是dialog用的
+const addReply = async (form) => {
+  const reply = {
+    sid: form.sid,
+    uid: store.getters.uid,
+    about: '响应' + form.topic
+  }
+  try {
+    ElMessage.success(await replyAdd(reply))
+  } catch (err) {
+    // pass
+  }
+}
 
-const dialogForm = ref({})
-const dialogVisible = ref(false)
+// dialogFormUpdate
 
-const initDialog = (form) => {
-  dialogForm.value = form
-  dialogVisible.value = true
+const dialogFormUpdate = ref({})
+const dialogFormUpdateVisiable = ref(false)
+
+const initDetailDialog = (form) => {
+  dialogFormUpdate.value = form
+  dialogFormUpdateVisiable.value = true
+}
+
+// dialogTable
+const dialogTable = ref({})
+const dialogTableVisiable = ref(false)
+
+const initReplyDialog = async (form) => {
+  const pageQuerySeek = {
+    page: 1,
+    pageSize: 20,
+    sid: form.sid
+  }
+
+  const res = await replyPageBySeek(pageQuerySeek)
+  dialogTable.value = res.records
+  dialogTableVisiable.value = true
 }
 </script>
 
